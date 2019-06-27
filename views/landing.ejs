@@ -1,0 +1,36 @@
+<% include partials/header %>
+
+<div class="page_header">
+    <h1>Landing page</h1>
+    <p>Welcome to the AH discount tracker</p>
+</div>
+
+<div>
+    <div class="shelf" id="shelf_discount">
+        <div>
+            <h1 class="shelf-header">On discount this week</h1>
+        </div>
+        <% productArray.forEach(function(product){ %>
+            <div class="product-box">
+                <h3><%=product.name%></h3>
+                <img src="<%=product.image%>" class="img">
+                <p class="discount"><%=product.discount %></p>
+            </div>
+        <% }); %>
+    </div>
+    <div class="shelf" id="shelf_no_discount">
+        <div>
+            <h1 class="shelf-header">Not on discount this week</h1>
+        </div>
+        <% productArray.forEach(function(product){ %>
+            <div class="product-box">
+                <h3><%=product.name%></h3>
+                <img src="<%=product.image%>" class="img">
+                <p class="discount"><%=product.discount %></p>
+                </div>
+        <% }); %>
+    </div>
+</div>
+
+
+<% include partials/footer %>

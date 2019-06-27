@@ -1,0 +1,73 @@
+html, body {
+    height: 100%;
+    font-family: Verdana;
+}
+
+html {
+    display: table;
+    margin: auto;
+}
+
+.shelf-header{
+    text-align: center;
+}
+
+/*center vertically*/
+/*body {*/
+/*    display: table-cell;*/
+/*    vertical-align: middle;*/
+/*}*/
+
+.page_header {
+    background-color: #3b9fe2;
+    width: 100%;
+}
+
+.discount {
+    color: #fff;
+    background-color: #ff7900;
+    font-size: 13px;
+    border-radius: 0 0 2px 2px;
+    width: 80px;
+}
+
+.shelf {
+    display: inline-block;
+}
+
+#shelf_discount {
+    border: 5px solid green;
+     display: inline-block;
+     max-width: 800px;
+     vertical-align: top;
+
+}
+
+#shelf_no_discount {
+    border: 5px solid red;
+    display: inline-block;
+     max-width: 800px;
+}
+
+@media screen and (max-width: 600px) 
+{
+    #shelf_discount, #shelf_no_discount
+     {
+          max-width: 100%;
+     }
+}
+
+
+.img {
+    width: 130px;
+    height: 130px;
+}
+
+.product-box{
+    display: inline-block;
+    justify-content:center;
+    align-items:center;
+    border: solid black 1px;
+    padding: 5px;
+    margin: auto;
+}

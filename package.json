@@ -1,0 +1,25 @@
+{
+  "name": "ah-discounter",
+  "version": "1.0.0",
+  "description": "Discount tracker for Albert Heijn",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbosselut/ah-discounter.git"
+  },
+  "author": "Manon Bosselut",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mbosselut/ah-discounter/issues"
+  },
+  "homepage": "https://github.com/mbosselut/ah-discounter#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "request": "^2.88.0"
+  }
+}
