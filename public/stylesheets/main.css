@@ -1,6 +1,63 @@
+/* --------CSS RESET ----------*/
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* -------END OF CSS RESET--------*/
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
 html, body {
     height: 100%;
-    font-family: Verdana;
+    font-family: 'Montserrat', sans-serif;
 }
 
 html {
@@ -8,8 +65,15 @@ html {
     margin: auto;
 }
 
+.page_header {
+    color: white;
+    font-size: 30px;
+    padding: 10px;
+}
+
 .shelf-header{
     text-align: center;
+    font-weight: 700;
 }
 
 /*center vertically*/
@@ -20,41 +84,47 @@ html {
 
 .page_header {
     background-color: #3b9fe2;
-    width: 100%;
+    width: 1200px;
+    text-align: center;
+}
+
+.content {
+    width: 1200px;
 }
 
 .discount {
     color: #fff;
     background-color: #ff7900;
-    font-size: 13px;
+    font-size: 15px;
     border-radius: 0 0 2px 2px;
-    width: 80px;
+    width: 100px;
+    padding: 2px;
 }
 
 .shelf {
-    display: inline-block;
+    display: block;
+    text-align: center;
+    padding: 10px;
+    width: 1200px;
 }
 
 #shelf_discount {
     border: 5px solid green;
-     display: inline-block;
-     max-width: 800px;
-     vertical-align: top;
+    /* display: block; */
+    vertical-align: top;
 
 }
 
 #shelf_no_discount {
     border: 5px solid red;
-    display: inline-block;
-     max-width: 800px;
 }
 
 @media screen and (max-width: 600px) 
 {
     #shelf_discount, #shelf_no_discount
-     {
-          max-width: 100%;
-     }
+    {
+        max-width: 100%;
+    }
 }
 
 
@@ -65,9 +135,13 @@ html {
 
 .product-box{
     display: inline-block;
-    justify-content:center;
-    align-items:center;
+    /* justify-content:center;
+    align-items:center; */
     border: solid black 1px;
-    padding: 5px;
-    margin: auto;
+    padding: 10px;
+    margin: 2.5%;
+    width: 15%;
+    height: 250px;
+    text-align: center;
+    vertical-align: middle;
 }

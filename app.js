@@ -8,7 +8,7 @@ app.set("view engine", "ejs");
 //connects to our main css file
 app.use(express.static(__dirname + "/public"));
 
-var productArray = ["https://www.ah.nl/producten/product/wi187593/ah-greenfields-jalapeno-burger", "https://www.ah.nl/producten/product/wi233276/pringles-original", "https://www.ah.nl/producten/product/wi365407/ah-dipsalade-couscous-falafel-met-hummus", "https://www.ah.nl/producten/product/wi62761/dr-oetker-big-americans-pizza-texas", "https://www.ah.nl/producten/product/wi191448/granditalia-piccante-met-rode-peper", "https://www.ah.nl/producten/product/wi112744/pepsi-cola-max-4-pack", "https://www.ah.nl/producten/product/wi457669/beyond-meat-the-beyond-burger", "https://www.ah.nl/producten/product/wi196825/granditalia-fusilli-integrali"];
+var productArray = ["https://www.ah.nl/producten/product/wi187593/ah-greenfields-jalapeno-burger", "https://www.ah.nl/producten/product/wi142440/ah-maaltijdsalade-italiaanse-kip", "https://www.ah.nl/producten/product/wi233276/pringles-original", "https://www.ah.nl/producten/product/wi365407/ah-dipsalade-couscous-falafel-met-hummus", "https://www.ah.nl/producten/product/wi62761/dr-oetker-big-americans-pizza-texas", "https://www.ah.nl/producten/product/wi191448/granditalia-piccante-met-rode-peper", "https://www.ah.nl/producten/product/wi112744/pepsi-cola-max-4-pack", "https://www.ah.nl/producten/product/wi457669/beyond-meat-the-beyond-burger", "https://www.ah.nl/producten/product/wi196825/granditalia-fusilli-integrali"];
 var productLinks = [];
 var finalProductList = [];
 var product = {};
