@@ -13,9 +13,11 @@ var productLinks = [];
 var finalProductList = [];
 
 const getJSONUrl = (url) => {
+    let obj = {}
     const { pathname } = urlTools.parse(url);
-
-    return `https://www.ah.nl/service/rest/delegate?url=${encodeURIComponent(pathname)}`;
+    obj[0] = url;
+    obj[1] = `https://www.ah.nl/service/rest/delegate?url=${encodeURIComponent(pathname)}`;
+    return obj;
 }
 
 function createProductList(productArray) {
@@ -40,22 +42,23 @@ function createProductList(productArray) {
 createProductList(productArray);
 
 productLinks.forEach(function (element) {
-    request(element, function (error, response, html) {
+    request(element[1], function (error, response, html) {
         if (!error && response.statusCode == 200) {
             var obj = JSON.parse(html);
             if(obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount == undefined){
                 product = {
                     name: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.description,
                     image: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.images[0].link.href,
-                    discount: "No discount"
-                    // discount: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.label
+                    discount: "No discount",
+                    url: element[0]
                 };
                 finalProductList.push(product);
             } else {
                 product = {
                     name: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.description,
                     image: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.images[0].link.href,
-                    discount: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.label
+                    discount: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.label,
+                    url: element[0]
                 }
                 finalProductList.push(product);
             }
@@ -82,5 +85,5 @@ app.get("/", function (req, res) {
 });
 
 app.listen(process.env.PORT || 3000, process.env.IP, function () {
-    console.log("The AHdiscounter server has started");
+    console.log("The AH discounter server has started");
 });
