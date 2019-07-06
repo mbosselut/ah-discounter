@@ -28,16 +28,7 @@ function createProductList(productArray) {
     });
 };
 
-//if using an object instead of an array for product links :
-// function createProductList(productArray){
-//     productArray.forEach(function(element, index){
-//         var obj = {
-//             product_url: productArray[index],
-//             json_url: getJSONUrl(productArray[index])
-//         };
-//         productLinksTest.push(obj);
-//     });
-// };
+// printing out specific JSON console.log(getJSONUrl("https://www.ah.nl/producten/product/wi142440/ah-maaltijdsalade-italiaanse-kip"));
 
 createProductList(productArray);
 
@@ -58,6 +49,7 @@ productLinks.forEach(function (element) {
                     name: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.description,
                     image: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.images[0].link.href,
                     discount: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.label,
+                    period: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.period,
                     url: element[0]
                 }
                 finalProductList.push(product);
