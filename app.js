@@ -29,7 +29,8 @@ function createProductList(productArray) {
     });
 };
 
-// printing out specific JSON console.log(getJSONUrl("https://www.ah.nl/producten/product/wi142440/ah-maaltijdsalade-italiaanse-kip"));
+// printing out specific JSON 
+// console.log(getJSONUrl("https://www.ah.nl/producten/product/wi187593/ah-greenfields-jalapeno-burger"));
 
 createProductList(productArray);
 
@@ -42,6 +43,7 @@ productLinks.forEach(function (element) {
                     name: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.description,
                     image: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.images[0].link.href,
                     discount: "No discount",
+                    price: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.priceLabel.now,
                     url: element[0]
                 };
                 finalProductList.push(product);

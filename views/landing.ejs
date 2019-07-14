@@ -29,8 +29,8 @@
             <% if(product.discount == "No discount") { %>
                 <div class="product-box">
                     <a href="<%= product.url %>"><h3><%=product.name%></h3></a>
-                    <a href="<%= product.url %>"><img src="<%=product.image%>" class="img"></a>
-                    <p class="discount"><%=product.discount %></p>
+                    <a href="<%= product.url %>"><img src="<%=product.image%>" class="img" id="no-discount-img"></a>
+                    <p class="price tag">€<%=product.price %></p>
                 </div>
             <% } %>
         <% }); %>
