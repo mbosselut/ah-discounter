@@ -178,41 +178,66 @@ function extractAHJsons(productList) {
 }
 const productListIncludingJsons = extractAHJsons(productList);
 
-let promise = checkDiscounts(productListIncludingJsons);
+checkDiscounts(productListIncludingJsons).then(finalList => console.log(finalList));
 
 // What this function does is go through the whole product list, and fetch the AH discount information for each item.
 function checkDiscounts(productListIncludingJsons) {
-    return new Promise(function(resolve, reject) {
-        productListIncludingJsons.forEach(function(product) {
-            request(product.ah.ahJson, function(error, response, html) {
-                if (!error && response.statusCode == 200) {
-                    var obj = JSON.parse(html);
-                    if (
-                        obj._embedded.lanes[4]._embedded.items[0]._embedded
-                            .product.discount == undefined
-                    ) {
-                        product.ah.discount = 'No discount';
-                        product.ah.price =
-                            obj._embedded.lanes[4]._embedded.items[0]._embedded.product.priceLabel.now;
-                    } else {
-                        product.ah.discount =
-                            obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.label;
-                        product.ah.period =
-                            obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.period;
+        let promises = productListIncludingJsons.map((product) =>{
+            return new Promise( (resolve, reject)=> {
+                request(product.ah.ahJson, (error, response, html) =>{
+                    if (!error && response.statusCode == 200) {
+                        let obj = JSON.parse(html);
+                        if (
+                            obj._embedded.lanes[4]._embedded.items[0]._embedded
+                                .product.discount == undefined
+                        ) {
+                            product.ah.discount = 'No discount';
+                            product.ah.price =
+                                obj._embedded.lanes[4]._embedded.items[0]._embedded.product.priceLabel.now;
+                        } else {
+                            product.ah.discount =
+                                obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.label;
+                            product.ah.period =
+                                obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.period;
+                        }
                     }
-                }
+                    resolve(product);
+                });
             });
-            resolve(productListIncludingJsons);
         });
-    });
+
+        return Promise.all(promises);
 }
 
+
+// What's happening here : 
+
+// You have a list of stuff. 
+// You go through each of them, and for each you do a HTTP request.
+// HTTP request is by nature asynchronous. To handle this 'when it returns' you want to use a mechanism. In this case a Promise.
+// WHAT YOU HAD : A single promise. But you need one asynchronous handling per request. Your code was working FOR THE FIRST http request
+// What I have done : Created a promise per product. Created a bunch of HTTP requests
+// Tell Javascript to wait for ALL OF THEM to be done (See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all)
+// The promise.all call returns a promise. I can either handle it in checkDiscounts or outside. I choose to do it outside. At that point I have all discounts.
+
+// Promise.all is nice when you do a lot of stuff. Another fun one is Promise.race. It wait for the first one to be resolved. Cool for example if you want a result in one of many databases. The fastest result is enough
+
+//Other things I saw : 
+// obj is not a very obvious variable name. 
+// Code is much easier to work with if you do as much as possible of 'pure' programming. That means that you create new objects instead of modifying new ones. 
+// In that case for example, I don't change the list of products any more, I just create a new one. That way I am sure that for example if I run the function several times with the same input I get the same output.
+// You can create a few extra functions that make it easier to test later. For example a 'getdiscount' that takes a link and returns a discount object to replace the lines 187 -> 203 could be useful
+
+// Good work! Promises are not easy but you were almost there! Good work! 
+// Des bisous!
+
+
 // Promise not working, still showing the old array
-promise.then(result => {
-    console.log('Promise completed, final list :', productListIncludingJsons);
+// promise.then(result => {
+    // console.log('Promise completed, final list :', result);
     // Not working either :
     // console.log('Promise completed, final list :', result);
-});
+// });
 
 //When manually checking the productListIncludingJsons AFTER some time, the correct result is printed out. Just a hacky way of
 // checking that the job is done and that the checkDisounts function works properly
