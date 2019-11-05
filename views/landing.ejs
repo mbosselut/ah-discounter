@@ -1,7 +1,7 @@
 <% include partials/header %>
 
 <div class="page_header">
-    <p>Welcome to the AH discount tracker</p>
+    <p>Manon's discount tracker</p>
     <p id="dateToday"><%=date%></p>
 </div>
 
@@ -10,35 +10,40 @@
         <div>
             <h1 class="shelf-header">On discount this week</h1>
         </div>
-        <% productArray.forEach(function(product){ %>
-            <% if(product.discount != "No discount") { %>
-                <div class="product-box">
-                    <a href="<%= product.url %>"><h3><%=product.name%></h3></a>
-                    <a href="<%= product.url %>"><img src="<%=product.image%>" class="img"></a>
-                    <p class="discount"><%=product.discount %></p>
-                    <%if(product.period){ %>
-                        <p class="discount period"><%=product.period %></p>
-                    <% } %>
-                </div>
+        <% productArray.forEach(function(product){ %> <% if(product.ah.discount
+        != "No discount") { %>
+        <div class="product-box">
+            <a href="<%= product.ah.ahLink %>"
+                ><h3><%=product.productName%></h3></a
+            >
+            <a href="<%= product.ah.ahLink %>"
+                ><img src="<%=product.image%>" class="img"
+            /></a>
+            <p class="discount"><%=product.ah.discount %></p>
+            <%if(product.ah.period){ %>
+            <p class="discount period"><%=product.ah.period %></p>
             <% } %>
-        <% }); %>
+        </div>
+        <% } %> <% }); %>
     </div>
     <div class="shelf" id="shelf_no_discount">
         <div>
             <h1 class="shelf-header">Not on discount this week</h1>
         </div>
-        <% productArray.forEach(function(product){ %>
-            <% if(product.discount == "No discount") { %>
-                <div class="product-box">
-                    <a href="<%= product.url %>"><h3><%=product.name%></h3></a>
-                    <a href="<%= product.url %>"><img src="<%=product.image%>" class="img" id="no-discount-img"></a>
-                    <p class="price tag">€<%=product.price %></p>
-                </div>
-            <% } %>
-        <% }); %>
+        <% productArray.forEach(function(product){ %> <% if(product.ah.discount
+        == "No discount") { %>
+        <div class="product-box">
+            <a href="<%= product.ah.ahLink %>"
+                ><h3><%=product.productName%></h3></a
+            >
+            <a href="<%= product.ah.ahLink %>"
+                ><img src="<%=product.image%>" class="img" id="no-discount-img"
+            /></a>
+            <p class="price tag">€<%=product.ah.price %></p>
+        </div>
+        <% } %> <% }); %>
     </div>
 </div>
-
 
 <% include partials/footer %>
 <!-- 

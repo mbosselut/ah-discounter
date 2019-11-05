@@ -1,73 +1,80 @@
 var request = require('request'),
-    express = require("express"),
+    express = require('express'),
     app = express(),
     urlTools = require('url'),
     date = require('date-and-time');
 
+const { productList } = require('./productList');
+
 //tells express to look for ejs files
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs');
 //connects to our main css file
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + '/public'));
 
-var productArray = ["https://www.ah.nl/producten/product/wi187593/ah-greenfields-jalapeno-burger", "https://www.ah.nl/producten/product/wi442669/doritos-cool-american-tortilla-chips", "https://www.ah.nl/producten/product/wi414808/douwe-egberts-lungo-original-koffiecups", "https://www.ah.nl/producten/product/wi185801/ah-duurzame-vangst-sockeye-zalm", "https://www.ah.nl/producten/product/wi211029/robijn-klein-and-krachtig-color-wasmiddel", "https://www.ah.nl/producten/product/wi196835/robijn-wasverzachter-morgenfris", "https://www.ah.nl/producten/product/wi420319/kwekkeboom-oven-black-angus-bitterballen", "https://www.ah.nl/producten/product/wi169797/ah-avocado", "https://www.ah.nl/producten/product/wi223416/dodoni-halloumi-43", "https://www.ah.nl/producten/product/wi142440/ah-maaltijdsalade-italiaanse-kip", "https://www.ah.nl/producten/product/wi233276/pringles-original", "https://www.ah.nl/producten/product/wi365407/ah-dipsalade-couscous-falafel-met-hummus", "https://www.ah.nl/producten/product/wi62761/dr-oetker-big-americans-pizza-texas", "https://www.ah.nl/producten/product/wi191448/granditalia-piccante-met-rode-peper", "https://www.ah.nl/producten/product/wi112744/pepsi-cola-max-4-pack", "https://www.ah.nl/producten/product/wi457669/beyond-meat-the-beyond-burger", "https://www.ah.nl/producten/product/wi196825/granditalia-fusilli-integrali"];
-var productLinks = [];
-var finalProductList = [];
+// printing out specific JSON, occasionnally useful for debugging
+// console.log(
+//     getJSONUrl(
+//         'https://www.ah.nl/producten/product/wi187593/ah-greenfields-jalapeno-burger'
+//     )
+// );
 
-const getJSONUrl = (url) => {
-    let obj = {}
+//Translating AH urls to JSON data
+const getJSONUrl = url => {
     const { pathname } = urlTools.parse(url);
-    obj[0] = url;
-    obj[1] = `https://www.ah.nl/service/rest/delegate?url=${encodeURIComponent(pathname)}`;
-    return obj;
-}
-
-function createProductList(productArray) {
-    productArray.forEach(function (element, index) {
-        var json_url = getJSONUrl(productArray[index]);
-        productLinks.push(json_url);
-        // isOnDiscount();
-    });
+    return `https://www.ah.nl/service/rest/delegate?url=${encodeURIComponent(
+        pathname
+    )}`;
 };
 
-// printing out specific JSON 
-// console.log(getJSONUrl("https://www.ah.nl/producten/product/wi187593/ah-greenfields-jalapeno-burger"));
+// Going through the product list and adding the AH JSON url property
+function extractAHJsons(productList) {
+    let productListIncludingJsons = productList.slice();
+    productListIncludingJsons.forEach(
+        product => (product.ah.ahJson = getJSONUrl(product.ah.ahLink))
+    );
+    return productListIncludingJsons;
+}
+const productListIncludingJsons = extractAHJsons(productList);
 
-createProductList(productArray);
-
-productLinks.forEach(function (element) {
-    request(element[1], function (error, response, html) {
-        if (!error && response.statusCode == 200) {
-            var obj = JSON.parse(html);
-            if(obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount == undefined){
-                product = {
-                    name: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.description,
-                    image: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.images[0].link.href,
-                    discount: "No discount",
-                    price: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.priceLabel.now,
-                    url: element[0]
-                };
-                finalProductList.push(product);
-            } else {
-                product = {
-                    name: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.description,
-                    image: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.images[0].link.href,
-                    discount: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.label,
-                    period: obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.period,
-                    url: element[0]
+// Fetching AH discounts
+function checkDiscounts(productListIncludingJsons) {
+    let promises = productListIncludingJsons.map(product => {
+        return new Promise((resolve, reject) => {
+            request(product.ah.ahJson, (error, response, html) => {
+                if (!error && response.statusCode == 200) {
+                    let obj = JSON.parse(html);
+                    if (
+                        obj._embedded.lanes[4]._embedded.items[0]._embedded
+                            .product.discount == undefined
+                    ) {
+                        product.ah.discount = 'No discount';
+                        product.ah.price =
+                            obj._embedded.lanes[4]._embedded.items[0]._embedded.product.priceLabel.now;
+                    } else {
+                        product.ah.discount =
+                            obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.label;
+                        product.ah.period =
+                            obj._embedded.lanes[4]._embedded.items[0]._embedded.product.discount.period;
+                    }
                 }
-                finalProductList.push(product);
-            }
-        }
+                resolve(product);
+            });
+        });
     });
-});
+
+    return Promise.all(promises);
+}
 
 let now = new Date();
-let formattedDate = date.format(now, 'dddd, MMMM DD YYYY');        // => 'Fri Jan 02 2015'
+let formattedDate = date.format(now, 'dddd, MMMM DD YYYY'); // => 'Fri Jan 02 2015'
 
-app.get("/", function (req, res) {
-    res.render("landing", { productArray: finalProductList, date: formattedDate });
+//Calling the checkDisounts function within the app.get and sending the results to the render method
+app.get('/', (req, res) => {
+    checkDiscounts(productListIncludingJsons).then(finalList =>
+        res.render('landing', { productArray: finalList, date: formattedDate })
+    );
 });
 
-app.listen(process.env.PORT || 3000, process.env.IP, function () {
-    console.log("The AH discounter server has started");
+app.listen(process.env.PORT || 3000, process.env.IP, function() {
+    console.log('The AH discounter server has started');
 });
