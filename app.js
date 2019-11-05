@@ -178,8 +178,6 @@ function extractAHJsons(productList) {
 }
 const productListIncludingJsons = extractAHJsons(productList);
 
-checkDiscounts(productListIncludingJsons).then(finalList => console.log(finalList));
-
 // What this function does is go through the whole product list, and fetch the AH discount information for each item.
 function checkDiscounts(productListIncludingJsons) {
         let promises = productListIncludingJsons.map((product) =>{
@@ -249,12 +247,15 @@ function checkDiscounts(productListIncludingJsons) {
 let now = new Date();
 let formattedDate = date.format(now, 'dddd, MMMM DD YYYY'); // => 'Fri Jan 02 2015'
 
-app.get('/', function(req, res) {
-    res.render('landing', {
-        //replace productArray with productListIncludingJsons when everything works
-        productArray: [],
-        date: formattedDate
-    });
+app.get('/', (req, res) =>{
+    // res.render('landing', {
+    //     //replace productArray with productListIncludingJsons when everything works
+    //     productArray: discountList,
+    //     date: formattedDate
+    // });
+    
+    checkDiscounts(productListIncludingJsons).then(finalList => res.json(finalList));
+
 });
 
 app.listen(process.env.PORT || 3000, process.env.IP, function() {
