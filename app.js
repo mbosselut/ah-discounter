@@ -9,8 +9,6 @@ app.set('view engine', 'ejs');
 //connects to our main css file
 app.use(express.static(__dirname + '/public'));
 
-let discountList;
-
 //Full product list
 productList = [
     {
@@ -180,8 +178,6 @@ function extractAHJsons(productList) {
 }
 const productListIncludingJsons = extractAHJsons(productList);
 
-checkDiscounts(productListIncludingJsons).then(finalList => discountList = finalList);
-
 // What this function does is go through the whole product list, and fetch the AH discount information for each item.
 function checkDiscounts(productListIncludingJsons) {
         let promises = productListIncludingJsons.map((product) =>{
@@ -257,7 +253,9 @@ app.get('/', (req, res) =>{
     //     productArray: discountList,
     //     date: formattedDate
     // });
-    res.json(discountList); // Just to test that we get the discounts
+    
+    checkDiscounts(productListIncludingJsons).then(finalList => res.json(finalList));
+
 });
 
 app.listen(process.env.PORT || 3000, process.env.IP, function() {
