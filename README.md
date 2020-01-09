@@ -4,3 +4,8 @@ Solo project using Node.js and Cheerio for web scraping, to check the discounts 
 ### Project deployed [here](http://ah-discounter.herokuapp.com/).
 
 ![app screenshot](https://i.ibb.co/5kdBQNc/Screenshot-from-2020-01-07-20-44-04.png)
+
+### What I have learned
+- Webscraping through Cheerio.js
+- Promises
+- EJS (Embedded JavaScript templating)
