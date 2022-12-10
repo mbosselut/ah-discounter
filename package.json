@@ -20,7 +20,7 @@
     "cheerio": "^1.0.0-rc.3",
     "date-and-time": "^0.7.0",
     "ejs": "^2.6.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "request": "^2.88.0",
     "superagent": "^5.1.0"
   }
